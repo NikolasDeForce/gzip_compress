@@ -1,4 +1,4 @@
-package main
+package gzip
 
 import (
 	"compress/gzip"
@@ -8,7 +8,7 @@ import (
 	"sync"
 )
 
-func compress(filename string) error {
+func Compress(filename string) error {
 	in, err := os.Open(filename)
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func compress(filename string) error {
 	return err
 }
 
-func main() {
+func NewCompress() {
 	var wg sync.WaitGroup
 	var i int = -1
 	var file string
@@ -36,7 +36,7 @@ func main() {
 		wg.Add(1)
 
 		go func(filename string) {
-			compress(filename)
+			Compress(filename)
 			wg.Done()
 		}(file)
 
