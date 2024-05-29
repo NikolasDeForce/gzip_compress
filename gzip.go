@@ -2,8 +2,10 @@ package main
 
 import (
 	"compress/gzip"
+	"fmt"
 	"io"
 	"os"
+	"sync"
 )
 
 func compress(filename string) error {
@@ -27,7 +29,18 @@ func compress(filename string) error {
 }
 
 func main() {
-	for _, file := range os.Args[1:] {
-		compress(file)
+	var wg sync.WaitGroup
+	var i int = -1
+	var file string
+	for i, file = range os.Args[1:] {
+		wg.Add(1)
+
+		go func(filename string) {
+			compress(filename)
+			wg.Done()
+		}(file)
+
+		wg.Wait()
+		fmt.Printf("Compressed %d files\n", i+1)
 	}
 }
